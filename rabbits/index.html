@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #000;
+        text-align: center;
+      }
+
+      div {
+        margin: 10px auto;
+      }
+
+      button {
+        border: none;
+        background-color: pink;
+        color: white;
+        font-weight: 700;
+        font-size: 20px;
+        border-radius: 3px;
+        margin: 10px auto;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      button:hover {
+        background-color: rgba(255, 192, 203, 0.657);
+      }
+
+      .carrot {
+        background-image: url("./img/carrot.png");
+        background-size: cover;
+        width: 220px;
+        height: 300px;
+      }
+
+      .rabbit {
+        background-image: url("./img/rabbit.png");
+        background-size: cover;
+        width: 220px;
+        height: 260px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div>
+      <button type="button">Find a rabbit! 🐇</button>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot rabbit"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+      <div class="carrot"></div>
+    </div>
+    
+    <script>
+      let button = document.querySelector("button")
+      let rabbit = document.querySelector(".rabbit")
+
+      button.addEventListener("click", () => {
+        rabbit.scrollIntoView({behavior: "smooth", block: "center"})
+      })
+    </script>
+  </body>
+</html>
