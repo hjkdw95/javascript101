@@ -1,4 +1,5 @@
-let content = document.querySelector("input")
+let content = document.querySelector("form")
+let listInput = document.querySelector("input")
 let sumbit = document.querySelector(".submit")
 let lists = document.querySelector("ul")
 
@@ -39,11 +40,14 @@ function saveLists(){
 function listUp(text){
     // 2. li 입력 - text 입력될 때마다 라인 업데이트해줘야되서 지역변수로 둠
     const list = document.createElement("li");
+
     //2-1. 내용 들어가는 구간
     const span = document.createElement("span");
     span.innerText = text;
+
     list.append(span);
     lists.append(list);
+
     // 저장소에서 구분할 수 있게 id지정
     const newId = idNumbers;
     idNumbers += 1;
@@ -59,20 +63,33 @@ function listUp(text){
 
     //2-2. delete버튼 생성
     const delBtn = document.createElement("button");
-    const delIcon = document.createElement("i");
-    delIcon.setAttribute('class', 'far fa-trash-alt');
-    delBtn.append(delIcon);
+    delBtn.setAttribute('class', 'trash');
+    delBtn.innerHTML = `<i class="fas fa-trash-alt"></i>`
     list.append(delBtn);
+
+
+    // 아이콘은 변하지 않으니까 innerHTML로 처리
+    //const delIcon = document.createElement("i");
+    //delIcon.setAttribute('class', 'fas fa-trash-alt');
+    //delBtn.append(delIcon);
+    
+
     //지우는 함수 발동
     delBtn.addEventListener("click", deleteItem);
 }
 
 // 1. input에서 얻어온 값을 list에 올려주는 함수로 보낸다
-function handleSubmit(event){
+function onAdd(event){
     event.preventDefault();
-    const currentValue = content.value;
+    const currentValue = listInput.value;
+    if(currentValue === ""){
+        listInput.focus();
+        return;
+    }
     listUp(currentValue);
-    content.value = "";
+    listInput.value = "";
+    listInput.focus();
+    
 }
 
 // 3. LS에 저장된 데이터를 화면에 보이게 할 함수
@@ -94,7 +111,8 @@ function loadLists(){
 
 function init(){
     loadLists();
-    sumbit.addEventListener("click", handleSubmit);
+    sumbit.addEventListener("click", onAdd);
+    content.addEventListener("submit",onAdd);
 }
 
-init()
+init();
