@@ -14,12 +14,15 @@ let idNumbers = 1;
 
 // 4. 지우는 함수 발동
 function deleteItem(event){
-    // 버튼 찾기
+    // ls 내부 데이터 삭제과정
+    
+    // ls reference - 버튼 찾기
     const removeBtn = event.target.parentNode;
-    // 버튼 부모 찾기
+    // ls reference - 버튼 부모 찾기
     const li = removeBtn.parentNode;
-    // 부모 li 지우기
+    // 현재 lists 내 li 지우기
     lists.removeChild(li);
+
     // localstroage에서 지우기
     const cleanList = listSave.filter(function(item){
         // 방금 막 지운 li의 id가 아닌 놈들만 ls에서 추출해내기
