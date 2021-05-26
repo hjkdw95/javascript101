@@ -2,8 +2,6 @@ let listInput = document.querySelector("input")
 let sumbit = document.querySelector(".submit")
 let lists = document.querySelector("ul")
 
-
-// 저장소
 // 저장소 이름
 const list_LS = "listSave"
 //저장소 value
@@ -12,96 +10,96 @@ let idNumbers = 1;
 
 
 // 1. input에서 얻어온 값을 list에 올려주는 함수로 보낸다
-function onAdd(event){
+function onAdd(){
     const currentValue = listInput.value;
     if(currentValue === ""){
         listInput.focus();
         return;
     }
-    listUp(currentValue);
+    createItem(currentValue);
     listInput.value = "";
     listInput.focus();
-    
 }
 
-// 2. list 생성 함수 - list입력/제거, local storage저장/삭제 기능
-function listUp(text){
+// 2. list 입력
+function createItem(text){
     //list에 추가
     const list = document.createElement("li");
-    const span = document.createElement("span");
-    span.innerText = text;
-    list.append(span);
-    lists.append(list);
+    list.setAttribute("class", "item__row")
+    list.setAttribute('data-id', idNumbers);
+    list.innerHTML = `
+        <span>${text}</span>
+        <button class="trash">
+            <i class="fas fa-trash-alt" data-id=${idNumbers}></i>
+        </button>
+    `;
+    //화면에 보이게
+    const item = lists.appendChild(list);
+    item.scrollIntoView({block: "center"});
 
-    // 새로 추가된 아이템으로 스크롤링
-    list.scrollIntoView({block: "center"});
-
-
-    // local storage에 저장
-    const newId = idNumbers;
-    idNumbers += 1;
-    list.id = newId;
-
+    // data에 추가(local storage가기 전 밑작업)
     const listObj = {
         text: text,
-        id: newId
+        id: idNumbers
     };
     listSave.push(listObj);
-    saveLists();
+    saveData();
+    idNumbers++;
 
-
-    //delete 버튼
-    const delBtn = document.createElement("button");
-    delBtn.setAttribute('class', 'trash');
-    delBtn.innerHTML = `<i class="fas fa-trash-alt"></i>`
-    list.append(delBtn);
-    
-    delBtn.addEventListener("click", deleteItem);
+    return list;
 }
 
-
-// 3. 업데이트 한 array를 local storage에 저장
-function saveLists(){
+// 3. local storage 추가
+function saveData(){    
     localStorage.setItem(list_LS, JSON.stringify(listSave))
 }
 
-// 3-1. LS에 저장된 데이터를 화면에 보이게 할 함수
+
+// 4. list 제거
+function deleteItem(event){
+    const id = event.target.dataset.id;
+        if(id){
+            deleteData(id);
+            const toBeDeleted = document.querySelector(`.item__row[data-id="${id}"]`);
+            toBeDeleted.remove();
+        }
+}
+
+// 5. local storage에서 삭제
+function deleteData(id){
+    const cleanList = listSave.filter(function(item){
+        return item.id !== parseInt(id);
+        //item.id = number
+        //li.id = string -> parseInt 사용(숫자로 반환)
+    });
+    listSave = cleanList;
+    saveData();
+}
+
+// 6. local storage에 저장된 내용 불러오기
 function loadLists(){
     const loadedLists = localStorage.getItem(list_LS);
     if(loadedLists !== null){
         const parsedLists = JSON.parse(loadedLists);
         parsedLists.forEach(list => {
-            listUp(list.text)
+            createItem(list.text)
         });
     }
 }
-
-// 4. local storage 및 리스트에서 삭제 기능을 수행하는 함수
-function deleteItem(event)
-    const li = event.target.parentNode.parentNode; // <li>
-    lists.removeChild(li);
-
-    // localstroage에서 지우기
-    const cleanList = listSave.filter(function(item){
-        return item.id !== parseInt(li.id);
-        //item.id = number
-        //li.id = string -> parseInt 사용(숫자로 반환)
-    });
-    listSave = cleanList;
-    saveLists();
-}
-
 
 
 
 function init(){
     loadLists();
     sumbit.addEventListener("click", onAdd);
+
     listInput.addEventListener("keypress", (event) => {
         if(event.key === "Enter"){
             onAdd();
         }
     });
+
+    lists.addEventListener("click", deleteItem)
 }
 
 init();
