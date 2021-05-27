@@ -33,81 +33,90 @@ li {
 }
 
 body {
-    background-image: url(./assets/img/background.png);
-    width: 100%;
-    height: 100vh;
-    background-size: cover;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
     font-family: 'Indie Flower', cursive;
+    text-align: center;
 }
 
 button {
     background-color: wheat;
-    border: 5px solid #80510f;
+    border: 5px solid #000;
     border-radius: 50%;
     width: 80px;
     height: 80px;
     font-size: 40px;
     padding-left: 10px;
     text-align: center;
-    color: #80510f;
+    color: #000;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 button:hover {
     background-color: rgb(197, 179, 145);
+    transform: scale(1.1);
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: url(./assets/img/background.png) center/cover;
+    width: 100%;
+    height: 100vh;
+    margin: auto;
 }
 
 .game__header {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    display: flex;
     height: 300px;
     margin: 40px auto;
 }
 
-.game-field {
-    z-index: -100;
-}
-
 .timer {
     background-color: wheat;
-    width: 100px;
-    height: 80px;
-    display: table;
+    width: 170px;
+    height: 85px;
     border-radius: 15px;
     border: 5px solid #000;
     margin-bottom: 20px;
-}
-
-.timer p {
-    display: table-cell;
     text-align: center;
-    vertical-align: middle;
-    font-size: 30px;
+    font-size: 50px;
+    padding: 0 10px;
 }
 
 .counter {
-    display: table;
     background-color: salmon;
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 5px solid #fff;
+    border: 5px solid #000;
+    color: #fff;
+    text-align: center;
+    font-size: 50px;
 }
 
-.counter p {
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 30px;
-    
+.game__field {
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+    margin-top: 150px;
 }
 
 .popup {
-    position: absolute;
-    top: 50%;
-    left: 36%;
+    display: inline-block;
+    margin: auto;
+    transform: translateY(-150%);
+}
+
+.popup--hide {
+    display: none;
 }
 
 .popup div {
@@ -117,9 +126,9 @@ button:hover {
     align-items: center;
     width: 500px;
     height: 300px;
-    background-color: #f9eeca;
+    background-color: rgba(0, 0, 0, 0.452);
     border-radius: 25px;
-    border: 5px solid #80510f;
+    border: 5px solid #000;
     padding: 45px;
 }
 
