@@ -80,8 +80,9 @@ button:hover {
 }
 
 .timer {
+    visibility: hidden;
     background-color: wheat;
-    width: 170px;
+    width: 180px;
     height: 85px;
     border-radius: 15px;
     border: 5px solid #000;
@@ -92,6 +93,7 @@ button:hover {
 }
 
 .counter {
+    visibility: hidden;
     background-color: salmon;
     width: 80px;
     height: 80px;
@@ -113,13 +115,6 @@ button:hover {
     display: inline-block;
     margin: auto;
     transform: translateY(-150%);
-}
-
-.popup--hide {
-    display: none;
-}
-
-.popup div {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -132,11 +127,11 @@ button:hover {
     padding: 45px;
 }
 
-.popup .success {
+.popup--hide {
     display: none;
 }
 
-.fail__message {
+.message {
     font-size: 50px;
 }
 
