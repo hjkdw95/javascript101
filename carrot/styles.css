@@ -40,6 +40,23 @@ body {
     font-family: 'Indie Flower', cursive;
 }
 
+button {
+    background-color: wheat;
+    border: 5px solid #80510f;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
+    padding-left: 10px;
+    text-align: center;
+    color: #80510f;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: rgb(197, 179, 145);
+}
+
 .game__header {
     display: flex;
     flex-direction: column;
@@ -49,17 +66,8 @@ body {
     margin: 40px auto;
 }
 
-.game__button {
-    background-color: wheat;
-    border: 5px solid brown;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    font-size: 40px;
-    padding-left: 10px;
-    text-align: center;
-    color: brown;
-    margin-bottom: 20px;
+.game-field {
+    z-index: -100;
 }
 
 .timer {
@@ -95,3 +103,31 @@ body {
     font-size: 30px;
     
 }
+
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 36%;
+}
+
+.popup div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 500px;
+    height: 300px;
+    background-color: #f9eeca;
+    border-radius: 25px;
+    border: 5px solid #80510f;
+    padding: 45px;
+}
+
+.popup .success {
+    display: none;
+}
+
+.fail__message {
+    font-size: 50px;
+}
+
