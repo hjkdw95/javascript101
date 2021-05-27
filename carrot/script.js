@@ -1,6 +1,6 @@
 const CARROT_SIZE = 80;
-const CARROT_COUNT = 5;
-const BUG_COUNT = 5;
+const CARROT_COUNT = 30;
+const BUG_COUNT = 30;
 let success = 0;
 let id = 1;
 let gameTime = 60;
@@ -15,17 +15,24 @@ const popup = document.querySelector(".popup");
 const replay__button = document.querySelector(".replay");
 const message = document.querySelector(".message");
 
+const carrotSound = new Audio("./assets/sound/carrot_pull.mp3")
+const bugSound = new Audio("./assets/sound/bug_pull.mp3")
+const alertSound = new Audio("./assets/sound/alert.wav")
+const bgSound = new Audio("./assets/sound/bg.mp3")
+const winSound = new Audio("./assets/sound/game_win.mp3")
 
 let started = false;
 let score = 0;
 let timer = undefined;
 
+// 게임의 4가지 단계
 function startGame(){
     started = true;
     initGame();
     showStopButton();
     showTimeAndScore();
     startGameTimer();
+    playSound(bgSound)
 }
 
 function stopGame(){
@@ -33,13 +40,22 @@ function stopGame(){
     stopGameTimer();
     hideGameButton();
     showPopupWithText("Wanna Replay?");
-    replay();
+    playSound(alertSound);
+    stopSound(bgSound);
 }
 
 function finishGame(win){
     started = false;
     hideGameButton();
-    showPopupWithText(win? "You Won!" : "You Lost")
+    stopGameTimer();
+    if(win){
+        playSound(winSound)
+    }else{
+        playSound(bugSound)
+    }
+    stopSound(bgSound);
+    showPopupWithText(win? "You Won!" : "You Lost");
+
 }
 
 function replayGame(){
@@ -51,22 +67,40 @@ function replayGame(){
     });
 };
 
+// 당근/벌레 클릭 시 진행할 사항
 function onFieldClick(event){
     if(!started){
         return;
     }
    const target = event.target;
+   // 당근 잡으면 성공 (갯수 세기)
    if(target.matches(".carrot")){
         target.remove();
+        playSound(carrotSound);
         success++;
+        updateScoreBoard();
         gameCounter();
         if(success === CARROT_COUNT){
             finishGame(true);
         }
+    // 벌레 잡으면 fail
    }else if(target.matches(".bug")){
         stopGameTimer();
         finishGame(false);
    }
+}
+
+function updateScoreBoard(){
+    game_count.innerHTML = `${success}`
+}
+
+function playSound(sound){
+    sound.currentTime = 0;
+    sound.play();
+}
+
+function stopSound(sound){
+    sound.pause();
 }
 
 function initGame(){
@@ -171,8 +205,10 @@ function gameCounter(){
 
 
 function init(){
+    //유효성 검사(당근/벌레 클릭 시 처리)
     field.addEventListener("click", onFieldClick);
 
+    // 시작, 끝내기 버튼
     game__button.addEventListener("click", () => {
         if(started){
             stopGame();
@@ -180,7 +216,7 @@ function init(){
             startGame();
         };
     });
-
+    // 다시 시작 버튼
     replayGame();
 }
 

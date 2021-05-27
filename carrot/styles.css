@@ -90,6 +90,8 @@ button:hover {
     text-align: center;
     font-size: 50px;
     padding: 0 10px;
+    cursor: auto;
+    user-select: none;
 }
 
 .counter {
@@ -102,6 +104,8 @@ button:hover {
     color: #fff;
     text-align: center;
     font-size: 50px;
+    cursor: auto;
+    user-select: none;
 }
 
 .game__field {
@@ -135,3 +139,12 @@ button:hover {
     font-size: 50px;
 }
 
+.carrot,
+.bug {
+    transition: 0.3ms ease-in
+}
+
+.carrot:hover,
+.bug:hover {
+    transform: scale(1.1);
+}
