@@ -3,27 +3,74 @@ const CARROT_COUNT = 5;
 const BUG_COUNT = 5;
 let success = 0;
 let id = 1;
+let gameTime = 60;
 
 const field = document.querySelector(".game__field");
 const fieldRect = field.getBoundingClientRect();
 const game__button = document.querySelector(".game__button");
 const stop__button = document.querySelector(".stop__button");
 const game_timer = document.querySelector(".timer");
-const game_count = document.querySelector(".counter")
+const game_count = document.querySelector(".counter");
+const popup = document.querySelector(".popup");
+const replay__button = document.querySelector(".replay");
+const message = document.querySelector(".message");
+
+
+let started = false;
+let score = 0;
+let timer = undefined;
+
+function init(){
+    field.addEventListener("click", onFieldClick);
+    game__button.addEventListener("click", () => {
+        if(started){
+            stopGame();
+        }else{
+            startGame();
+        }
+        started = !started;
+    });
+}
+
+function startGame(){
+    initGame();
+    showStopButton();
+    showTimeAndScore();
+    startGameTimer();
+    bugCounter();
+}
+
+function stopGame(){
+    stopGameTimer();
+    hideGameButton();
+    showPopupWithText("Wanna Replay?");
+    replay();
+}
 
 function initGame(){
-    game__button.setAttribute("class", "game__button");
-    game__button.innerHTML = `<i class="fas fa-play"></i>`
+    gameCounter();
+    field.innerHTML = "";
+
     addItem("carrot", CARROT_COUNT, "./assets/img/carrot.png");
     addItem("bug", BUG_COUNT, "./assets/img/bug.png");
-    gameCounter();
-    stopGame();
-    clock();
-
     //클릭하면 삭제시키는 함수
-    field.addEventListener("click", deleteItem)
-;
+    field.addEventListener("click", deleteItem);
 }
+
+/*function onFieldClick(event){
+    if(!started){
+        return;
+    }
+   const target = event.target;
+   if(target.matches(".carrot")){
+        target.remove();
+        success++;
+
+   }else if(target.matches(".bug")){
+
+   }
+}
+*/
 
 function addItem(className, count, imgPath){
     const x1 = 0;
@@ -64,52 +111,75 @@ function randomNumber(min, max){
     return calculatedNumber; 
 }
 
-function stopGame(){
-    // stop버튼
-    game__button.removeEventListener("click", initGame)
-    game__button.setAttribute("class", "stop__button");
-    game__button.innerHTML = `<i class="fas fa-pause"></i>`;
+function showStopButton(){
+    const icon = game__button.querySelector(".fa-play");
+    icon.classList.add("fa-pause");
+    icon.classList.remove("fa-play")
+   // game__button.removeEventListener("click", initGame)
+   // game__button.setAttribute("class", "stop__button");
+   // game__button.innerHTML = `<i class="fas fa-pause"></i>`;
     //resume();
 }
 
-/*
-function resume(){
-    game__button.removeEventListener("click", stopGame)
-    game__button.setAttribute("class", "game__button");
-    game__button.innerHTML = `<i class="fas fa-play"></i>`;
-    init();
+function hideGameButton(){
+    game__button.style.visibility = "hidden";
 }
-*/
 
-function clock(){
-    let time = 60;
-    let minute;
-    let sec;
-    let x = setInterval(() => {
-        minute = parseInt(time/60);
-        sec = time % 60;
-        game_timer.innerHTML = `${minute < 10 ? `0${minute}` : minute} : ${sec < 10 ? `0${sec}` : sec}`
-        time--;
+function showTimeAndScore(){
+    game_timer.style.visibility = `visible`;
+    game_count.style.visibility = `visible`;
+}
 
-        if(time < 0){
-            clearInterval(x);
-            console.log("게임 종료")
-        }
+function startGameTimer(){
+    let remainingTimeSec = gameTime;
+    updateTimerText(remainingTimeSec);;
+    timer = setInterval(() => {
+        if(remainingTimeSec <=0){
+            clearInterval(timer);
+            return;
+       }
+        updateTimerText(--remainingTimeSec);
     }, 1000);
 }
+
+function stopGameTimer(){
+    clearInterval(timer);
+}
+
+function updateTimerText(remainingTimeSec){
+    let min = Math.floor(remainingTimeSec / 60);
+    let sec = remainingTimeSec % 60;
+    game_timer.innerHTML = `
+        ${min < 10 ? `0${min}` : min} : ${sec < 10 ? `0${sec}` : sec}`
+}
+
+function showPopupWithText(text){
+    message.innerHTML = `${text}`;
+    popup.classList.remove("popup--hide")
+}
+
 
 function gameCounter(){
     game_count.innerHTML = `${CARROT_COUNT - success}`;
 }
 
-function init(){
-    game__button.addEventListener("click", initGame);
+// 모르겠어..
+function replay(){
+    replay__button.addEventListener("click", () => {
+        startGame();
+    });
+}   
+
+function bugCounter(){
+    field.addEventListener("click", (event) => {
+        if(event.target.className === "bug"){
+            stopGame();
+        }
+    })
 }
 
+
 init();
-
-
-
 
 
 
