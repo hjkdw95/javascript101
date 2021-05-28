@@ -1,6 +1,6 @@
 const CARROT_SIZE = 80;
-const CARROT_COUNT = 30;
-const BUG_COUNT = 30;
+const CARROT_COUNT = 20;
+const BUG_COUNT = 20;
 let success = 0;
 let id = 1;
 let gameTime = 60;
@@ -28,6 +28,7 @@ let timer = undefined;
 // 게임의 4가지 단계
 function startGame(){
     started = true;
+    success = 0;
     initGame();
     showStopButton();
     showTimeAndScore();
@@ -78,7 +79,6 @@ function onFieldClick(event){
         target.remove();
         playSound(carrotSound);
         success++;
-        updateScoreBoard();
         gameCounter();
         if(success === CARROT_COUNT){
             finishGame(true);
@@ -88,10 +88,6 @@ function onFieldClick(event){
         stopGameTimer();
         finishGame(false);
    }
-}
-
-function updateScoreBoard(){
-    game_count.innerHTML = `${success}`
 }
 
 function playSound(sound){
@@ -122,8 +118,6 @@ function addItem(className, count, imgPath){
         const item = document.createElement("img");
         item.setAttribute("class", className)
         item.setAttribute("src", imgPath);
-        item.setAttribute("id", `${id}`);
-        id++;
         field.append(item);
         // 아이템 배치
         item.style.position = "absolute";
@@ -133,7 +127,6 @@ function addItem(className, count, imgPath){
         item.style.top = `${y}px`;
     }
 }
-
 
 function randomNumber(min, max){
     const calculatedNumber = Math.floor(Math.random()*(max - min) + min);
