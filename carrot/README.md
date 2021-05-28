@@ -2,7 +2,7 @@
 
 한정된 시간 안에 당근을 모두 클릭해야 이기는 게임!
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6dc92517-3c05-418f-8e86-f05fb1bdaa3b/ezgif.com-gif-maker_(15).gif](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6dc92517-3c05-418f-8e86-f05fb1bdaa3b/ezgif.com-gif-maker_(15).gif)
+![ezgif com-gif-maker (15)](https://user-images.githubusercontent.com/76423949/119917832-40efda00-bfa2-11eb-9652-a598248e3ef1.gif)
 
 # 제작기간
 
