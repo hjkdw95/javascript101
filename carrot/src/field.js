@@ -1,7 +1,7 @@
 "use strict";
+import * as sound from "./sound.js"
 
 const CARROT_SIZE = 80;
-const carrotSound = new Audio("./assets/sound/carrot_pull.mp3")
 
 // 당근 벌레 랜덤 배치 및 클릭 처리만 다룬다 (나머지는 script.js에서 다룸)
 export default class Field {
@@ -11,6 +11,10 @@ export default class Field {
         this.field = document.querySelector(".game__field");
         this.fieldRect = this.field.getBoundingClientRect();
         // 클릭되면 onclick 함수를 호출한다
+        // 아래 this.onclick 같이 어떤 클래스 안에 있는 함수를 다른 콜백으로 전달할 때는 그 함수가 포함되어져 있는 클래스의 정보가 사라진다.
+        // 이렇게 날라가는 것을 방지하기 위해 this와 함수를 묶을 수 있는 binding 기능을 사용한다
+        // 직접적으로 .bind()메서드를 이용할 수도 있고, arrow function을 이용할 수도 있다. 둘중 맞는 방법을 사용한다.
+        // 참고로 arrow function은 일반 함수와 다르게 알아서 binding이 된다
         this.field.addEventListener("click", this.onClick);
     }
 
@@ -47,12 +51,12 @@ export default class Field {
         }
     }
 
-    onClick(event){
+    onClick = (event) => {
         const target = event.target;
         // 당근 잡으면 성공 (갯수 세기)
         if(target.matches(".carrot")){
             target.remove();
-            playSound(carrotSound);
+            sound.playCarrot();
             // 이 아이템이 클릭되면 carrot이 클릭되었다고 본부에 전달해줘라
             // 근데 그전에 onItemClick이라는 "콜백함수"가 있는지 부터 확인해라(버그 방지용!)
             this.onItemClick && this.onItemClick("carrot")        
@@ -68,9 +72,4 @@ export default class Field {
 function randomNumber(min, max){
     const calculatedNumber = Math.floor(Math.random()*(max - min) + min);
     return calculatedNumber; 
-}
-
-function playSound(sound){
-    sound.currentTime = 0;
-    sound.play();
 }
