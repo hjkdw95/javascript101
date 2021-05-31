@@ -1,40 +1,31 @@
 "use strict";
 import PopUp from "./popup.js"
-import Field from "./field.js"
 import * as sound from "./sound.js"
-
-
-const CARROT_COUNT = 20;
-const BUG_COUNT = 20;
-let success = 0;
-let gameTime = 60;
+import Game from "./game.js"
 
 const game__button = document.querySelector(".game__button");
-const stop__button = document.querySelector(".stop__button");
-const game_timer = document.querySelector(".timer");
-const game_count = document.querySelector(".counter");
-
-let started = false;
-let timer = undefined;
+const CARROT_COUNT = 20;
+const BUG_COUNT = 20;
 
 const gameFinishBanner = new PopUp();
-const gamefield = new Field(CARROT_COUNT, BUG_COUNT);
+
+const newGame = new Game();
 
 // 게임의 4가지 단계
 function startGame(){
     started = true;
     success = 0;
     initGame();
-    showStopButton();
-    showTimeAndScore();
+    newGame.showStopButton();
+    newGame.showTimeAndScore();
     startGameTimer();
     sound.playBg();
 }
 
 function stopGame(){
     started = false;
-    stopGameTimer();
-    hideGameButton();
+    newGame.stopGameTimer();
+    newGame.hideGameButton();
     gameFinishBanner.showWithText("Wanna Replay?");
     sound.playAlert();
     sound.stopBg();
@@ -42,8 +33,8 @@ function stopGame(){
 
 function finishGame(win){
     started = false;
-    hideGameButton();
-    stopGameTimer();
+    newGame.hideGameButton();
+    newGame.stopGameTimer();
     if(win){
         sound.playWin();
     }else{
@@ -62,19 +53,19 @@ function onItemClick(item){
    // 당근 잡으면 성공 (갯수 세기)
    if(item === "carrot"){
         success++;
-        gameCounter();
+        newGame.gameCounter();
         if(success === CARROT_COUNT){
             finishGame(true);
         }
     // 벌레 잡으면 fail
    }else if(item === "bug"){
-        stopGameTimer();
+        newGame.stopGameTimer();
         finishGame(false);
    }
 }
 
 function initGame(){
-    gameCounter();
+    newGame.gameCounter();
     gamefield.init();
 }
 
@@ -132,7 +123,7 @@ function gameCounter(){
 
 function init(){
     //유효성 검사(당근/벌레 클릭 시 처리)
-    gamefield.setItemClickListener(onItemClick);
+    
 
     // 시작, 끝내기 버튼
     game__button.addEventListener("click", () => {

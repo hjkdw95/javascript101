@@ -51,7 +51,7 @@ export default class Field {
         }
     }
 
-    onClick = (event) => {
+    onItemClick = (event) => {
         const target = event.target;
         // 당근 잡으면 성공 (갯수 세기)
         if(target.matches(".carrot")){
