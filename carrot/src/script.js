@@ -1,8 +1,10 @@
+"use strict";
+import PopUp from "./popup.js"
+
 const CARROT_SIZE = 80;
 const CARROT_COUNT = 20;
 const BUG_COUNT = 20;
 let success = 0;
-let id = 1;
 let gameTime = 60;
 
 const field = document.querySelector(".game__field");
@@ -11,9 +13,7 @@ const game__button = document.querySelector(".game__button");
 const stop__button = document.querySelector(".stop__button");
 const game_timer = document.querySelector(".timer");
 const game_count = document.querySelector(".counter");
-const popup = document.querySelector(".popup");
-const replay__button = document.querySelector(".replay");
-const message = document.querySelector(".message");
+
 
 const carrotSound = new Audio("./assets/sound/carrot_pull.mp3")
 const bugSound = new Audio("./assets/sound/bug_pull.mp3")
@@ -22,8 +22,10 @@ const bgSound = new Audio("./assets/sound/bg.mp3")
 const winSound = new Audio("./assets/sound/game_win.mp3")
 
 let started = false;
-let score = 0;
 let timer = undefined;
+const gameFinishBanner = new PopUp();
+
+
 
 // 게임의 4가지 단계
 function startGame(){
@@ -40,7 +42,7 @@ function stopGame(){
     started = false;
     stopGameTimer();
     hideGameButton();
-    showPopupWithText("Wanna Replay?");
+    gameFinishBanner.showWithText("Wanna Replay?");
     playSound(alertSound);
     stopSound(bgSound);
 }
@@ -55,18 +57,12 @@ function finishGame(win){
         playSound(bugSound)
     }
     stopSound(bgSound);
-    showPopupWithText(win? "You Won!" : "You Lost");
+    gameFinishBanner.showWithText(win? "You Won!" : "You Lost");
 
 }
 
-function replayGame(){
-    replay__button.addEventListener("click", () => {
-        stopGameTimer();
-        startGame();
-        hidePopUp();
-        showGameButton();
-    });
-};
+
+
 
 // 당근/벌레 클릭 시 진행할 사항
 function onFieldClick(event){
@@ -136,11 +132,7 @@ function randomNumber(min, max){
 function showStopButton(){
     const icon = game__button.querySelector(".fas");
     icon.classList.add("fa-pause");
-    icon.classList.remove("fa-play")
-   // game__button.removeEventListener("click", initGame)
-   // game__button.setAttribute("class", "stop__button");
-   // game__button.innerHTML = `<i class="fas fa-pause"></i>`;
-    //resume();
+    icon.classList.remove("fa-play");
 }
 
 function hideGameButton(){
@@ -180,14 +172,6 @@ function updateTimerText(remainingTimeSec){
         ${min < 10 ? `0${min}` : min} : ${sec < 10 ? `0${sec}` : sec}`
 }
 
-function showPopupWithText(text){
-    message.innerHTML = `${text}`;
-    popup.classList.remove("popup--hide")
-}
-
-function hidePopUp(){
-    popup.classList.add("popup--hide")
-}
 
 
 function gameCounter(){
@@ -209,8 +193,13 @@ function init(){
             startGame();
         };
     });
-    // 다시 시작 버튼
-    replayGame();
+    // 다시 시작
+    // 팦업이 클릭이 되면 게임을 시작해라
+    gameFinishBanner.setClickListener(() => {
+        stopGameTimer();
+        startGame();
+        showGameButton();
+    })
 }
 
 init();
