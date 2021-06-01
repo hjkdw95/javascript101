@@ -8,12 +8,16 @@ export const Reason = Object.freeze({
     cancel: "cancel"
 })
 
-
 // builder pattern
+// Game Class를 함부로 건들지 못하게(어떻게 만들어지는 것인지 알지 못하게) builder를 대신 사용
+// 이로서 Game Class는 노출되지 않는다
+//! 가독성도 높아진다!(우리가 어떤 값을 설정했는지 한눈에 알 수 있다)
 export class GameBuilder {
     withGameDuration(duration){
         this.gameDuration = duration;
         return this;
+        // 클래스 자체를 return 한다.
+        // array자체를 return 하여 메소드를 chaining해서 호출할 수 있도록 한다
     }
     withCarrotCount(num){
         this.carrotCount = num;
@@ -41,11 +45,14 @@ class Game {
         this.carrotCount = carrotCount;
         this.bugCount = bugCount;
 
+        this.started = false;
+        this.gameTime = 60;
+        this.success = 0;
+
         this.game_timer = document.querySelector(".timer");
         this.game_count = document.querySelector(".counter");   
-        //this.stop__button = document.querySelector(".stop__button");
-
         this.game__button = document.querySelector(".game__button");
+
         this.game__button.addEventListener("click", () => {
             if(this.started){
                 this.stop(Reason.cancel);
@@ -54,15 +61,12 @@ class Game {
             };
         });
 
-        this.gamefield = new Field(carrotCount, bugCount);
+        this.gamefield = new Field(this.carrotCount, this.bugCount)
         this.gamefield.setItemClickListener(this.onItemClick);
-
-
-        this.started = false;
-        this.gameTime = 60;
-        this.success = 0;
+        // gamefield의 콜백함수로 game.onItemClick 지정
     }
 
+    // 게임이 끝났는지 여부 받아오는 callback
     setGameStopListener(onGameStop){
         this.onGameStop = onGameStop;
     }
@@ -82,6 +86,7 @@ class Game {
         this.stopGameTimer();
         this.hideGameButton();
         sound.stopBg();
+        //게임이 멈췄으면 callback 실행하기
         this.onGameStop && this.onGameStop(reason);
     }
 

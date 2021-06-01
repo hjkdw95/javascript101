@@ -16,11 +16,13 @@ export class Field {
         this.field = document.querySelector(".game__field");
         this.fieldRect = this.field.getBoundingClientRect();
         // 클릭되면 onclick 함수를 호출한다
-        // 아래 this.onclick 같이 어떤 클래스 안에 있는 함수를 다른 콜백으로 전달할 때는 그 함수가 포함되어져 있는 클래스의 정보가 사라진다.
-        // 이렇게 날라가는 것을 방지하기 위해 this와 함수를 묶을 수 있는 binding 기능을 사용한다
+        //! 아래 this.onclick 같이 어떤 클래스 안에 있는 함수를 다른 콜백으로 전달할 때는 그 함수가 포함되어져 있는 클래스의 정보가 사라진다.
+        //! 이렇게 날라가는 것을 방지하기 위해 this와 클래스를 묶을 수 있는 binding 기능을 사용한다
         // 직접적으로 .bind()메서드를 이용할 수도 있고, arrow function을 이용할 수도 있다. 둘중 맞는 방법을 사용한다.
         // 참고로 arrow function은 일반 함수와 다르게 알아서 binding이 된다
-        this.field.addEventListener("click", this.onItemClick);
+        //this.onFieldClickListener = this.onFieldClickListener.bind(this)
+        this.field.addEventListener("click", this.onFieldClickListener);
+        // 콜백함수를 onFieldClickListener으로 지정한 이유는, 꼭 이것을 사용해야하기 때문에 지정
     }
 
     //클릭한 내역 전달하는 함수 (콜백함수) - 단지 전달만 함
@@ -28,13 +30,14 @@ export class Field {
         this.onItemClick = onItemClick;
     }
 
+    // 게임에 당근, 벌레 갯수만큼 풀어놓기
     init(){
         this.field.innerHTML = "";
         this._addItem(ItemType.carrot, this.carrotCount, "./assets/img/carrot.png");
         this._addItem(ItemType.bug, this.bugCount, "./assets/img/bug.png");
     }
 
-    // private 멤버 변수는 _(언더바)로 표시 - 외부에선 사용하지 않도록 합의된 표현
+    // private 멤버 변수는 _(언더바)로 표시 -  class 외부에선 사용하지 않도록 합의된 표현
     _addItem(className, count, imgPath){
         const x1 = 0;
         const y1 = 0;
@@ -57,14 +60,15 @@ export class Field {
         }
     }
 
-    onItemClick = (event) => {
+    onFieldClickListener = (event) => {
         const target = event.target;
         // 당근 잡으면 성공 (갯수 세기)
         if(target.matches(".carrot")){
             sound.playCarrot();
             target.remove();
-            // 이 아이템이 클릭되면 carrot이 클릭되었다고 본부에 전달해줘라
+            // 이 아이템이 클릭되면 carrot이 클릭되었다고 콜백에 전달해라
             // 근데 그전에 onItemClick이라는 "콜백함수"가 있는지 부터 확인해라(버그 방지용!)
+            // 여기서 콜백 함수는 game.js 60번 줄에 game.onItemClick으로 지정하였다. 그쪽으로 값을 넘긴다
             this.onItemClick && this.onItemClick(ItemType.carrot)        
         // 벌레 잡으면 fail
         }else if(target.matches(".bug")){
