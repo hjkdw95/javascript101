@@ -1,6 +1,9 @@
+// 게임을 만들고 게임과 배너 연결
+
 "use strict";
 import PopUp from "./popup.js"
-import GameBuilder from "./game.js"
+import { GameBuilder, Reason } from "./game.js"
+import * as sound from "./sound.js"
 
 
 const gameFinishBanner = new PopUp();
@@ -14,14 +17,17 @@ game.setGameStopListener((reason) => {
     console.log(reason);
     let message;
     switch(reason){
-        case "cancel":
-            message = "Wanna Replay?"
+        case Reason.cancel:
+            sound.playAlert();
+            message = "Wanna Replay?";
             break;
-        case "win":
-            message = "You Won!"
+        case Reason.win:
+            sound.playWin();
+            message = "You Won!";
             break;
-        case "lose":
-            message = "Looooose!"
+        case Reason.lose:
+            sound.playBug();
+            message = "Looooose!";
             break;
         default:
             throw new Error ("not vaild reason");

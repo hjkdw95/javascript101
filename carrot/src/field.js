@@ -3,8 +3,13 @@ import * as sound from "./sound.js"
 
 const CARROT_SIZE = 80;
 
+export const ItemType = Object.freeze({
+    carrot: "carrot",
+    bug: "bug"
+})
+
 // 당근 벌레 랜덤 배치 및 클릭 처리만 다룬다 (나머지는 script.js에서 다룸)
-export default class Field {
+export class Field {
     constructor(carrotCount, bugCount){
         this.carrotCount = carrotCount;
         this.bugCount = bugCount;
@@ -25,8 +30,8 @@ export default class Field {
 
     init(){
         this.field.innerHTML = "";
-        this._addItem("carrot", this.carrotCount, "./assets/img/carrot.png");
-        this._addItem("bug", this.bugCount, "./assets/img/bug.png");
+        this._addItem(ItemType.carrot, this.carrotCount, "./assets/img/carrot.png");
+        this._addItem(ItemType.bug, this.bugCount, "./assets/img/bug.png");
     }
 
     // private 멤버 변수는 _(언더바)로 표시 - 외부에선 사용하지 않도록 합의된 표현
@@ -60,10 +65,10 @@ export default class Field {
             target.remove();
             // 이 아이템이 클릭되면 carrot이 클릭되었다고 본부에 전달해줘라
             // 근데 그전에 onItemClick이라는 "콜백함수"가 있는지 부터 확인해라(버그 방지용!)
-            this.onItemClick && this.onItemClick("carrot")        
+            this.onItemClick && this.onItemClick(ItemType.carrot)        
         // 벌레 잡으면 fail
         }else if(target.matches(".bug")){
-            this.onItemClick && this.onItemClick("bug")
+            this.onItemClick && this.onItemClick(ItemType.bug)
         }
     }
 }

@@ -1,8 +1,16 @@
 "use strict"
-import Field from "./field.js"
+import { Field, ItemType } from "./field.js"
 import * as sound from "./sound.js"
 
-export default class GameBuilder {
+export const Reason = Object.freeze({
+    win: "win",
+    lose: "lose",
+    cancel: "cancel"
+})
+
+
+// builder pattern
+export class GameBuilder {
     withGameDuration(duration){
         this.gameDuration = duration;
         return this;
@@ -40,7 +48,7 @@ class Game {
         this.game__button = document.querySelector(".game__button");
         this.game__button.addEventListener("click", () => {
             if(this.started){
-                this.stop();
+                this.stop(Reason.cancel);
             }else{
                 this.start();
             };
@@ -69,26 +77,12 @@ class Game {
         sound.playBg();
     }
     
-    stop(){
+    stop(reason){
         this.started = false;
         this.stopGameTimer();
         this.hideGameButton();
-        sound.playAlert();
         sound.stopBg();
-        this.onGameStop && this.onGameStop("cancel");
-    }
-
-    finish(win){
-        this.started = false;
-        this.hideGameButton();
-        this.stopGameTimer();
-        if(win){
-            sound.playWin();
-        }else{
-            sound.playBug();
-        }
-        sound.stopBg();
-        this.onGameStop && this.onGameStop(win? "win" : "lose");
+        this.onGameStop && this.onGameStop(reason);
     }
 
     initGame(){
@@ -96,21 +90,22 @@ class Game {
         this.gamefield.init();
     }
 
+    // 아이템이 클릭이 되면 점수 계산
     onItemClick = (item) => {
         if(!this.started){
             return;
         }
        // 당근 잡으면 성공 (갯수 세기)
-       if(item === "carrot"){
+       if(item === ItemType.carrot){
             this.success++;
             this.gameCounter();
             if(this.success === this.carrotCount){
-                this.finish(true);
+                this.stop(Reason.win);
             }
         // 벌레 잡으면 fail
-       }else if(item === "bug"){
+       }else if(item === ItemType.bug){
             this.stopGameTimer();
-            this.finish(false);
+            this.stop(Reason.lose);
        }
     }
 
@@ -139,7 +134,7 @@ class Game {
         this.timer = setInterval(() => {
             if(remainingTimeSec <=0){
                 clearInterval(this.timer);
-                this.finish(this.carrotCount === this.success)
+                this.stop(this.carrotCount === this.success? Reason.win : Reason.lose)
                 return;
            }
             this.updateTimerText(--remainingTimeSec);
