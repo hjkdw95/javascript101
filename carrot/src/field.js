@@ -15,7 +15,7 @@ export default class Field {
         // 이렇게 날라가는 것을 방지하기 위해 this와 함수를 묶을 수 있는 binding 기능을 사용한다
         // 직접적으로 .bind()메서드를 이용할 수도 있고, arrow function을 이용할 수도 있다. 둘중 맞는 방법을 사용한다.
         // 참고로 arrow function은 일반 함수와 다르게 알아서 binding이 된다
-        this.field.addEventListener("click", this.onClick);
+        this.field.addEventListener("click", this.onItemClick);
     }
 
     //클릭한 내역 전달하는 함수 (콜백함수) - 단지 전달만 함
@@ -41,13 +41,14 @@ export default class Field {
             const item = document.createElement("img");
             item.setAttribute("class", className)
             item.setAttribute("src", imgPath);
-            this.field.append(item);
             // 아이템 배치
             item.style.position = "absolute";
             const x = randomNumber(x1, x2);
             const y = randomNumber(y1, y2);
             item.style.left = `${x}px`;
             item.style.top = `${y}px`;
+            item.style.userDrag = "none";
+            this.field.appendChild(item);
         }
     }
 
@@ -55,8 +56,8 @@ export default class Field {
         const target = event.target;
         // 당근 잡으면 성공 (갯수 세기)
         if(target.matches(".carrot")){
-            target.remove();
             sound.playCarrot();
+            target.remove();
             // 이 아이템이 클릭되면 carrot이 클릭되었다고 본부에 전달해줘라
             // 근데 그전에 onItemClick이라는 "콜백함수"가 있는지 부터 확인해라(버그 방지용!)
             this.onItemClick && this.onItemClick("carrot")        
@@ -70,6 +71,5 @@ export default class Field {
 
 // 클래스에 상관 없는 함수라면 클래스 밖에 두어 호출 될 때마다 반복되지 않도록 한다(메모리 효율) = static function
 function randomNumber(min, max){
-    const calculatedNumber = Math.floor(Math.random()*(max - min) + min);
-    return calculatedNumber; 
+    return Math.floor(Math.random()*(max - min) + min);
 }
